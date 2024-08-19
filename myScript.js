@@ -19,6 +19,7 @@ function permute(plainText, permutationTable) {
 }
 
 function circularShiftLeft(str, shiftAmount) {
+    
     let n = str.length;
     
     let shift = shiftAmount % n;
@@ -45,6 +46,10 @@ function permuteKey(key, permutationTable, roundNumber) {
     return permute(combinedKey, permutationTable);
 }
 
+function xOr(expandedRight, roundKey) {
+    return expandedRight.split('').map((bit, index) => bit ^ roundKey[index]).join('');
+}
+
 function f(right, key) {
     
     const expansionTable = [32, 1, 2, 3, 4, 5, 4, 5, 6, 7, 8, 9, 8, 9, 10, 11, 
@@ -67,9 +72,12 @@ function f(right, key) {
         44, 49, 39, 56, 34, 53,
         46, 42, 50, 36, 29, 32
         ];
+    
     roundKey = permuteKey(key, pc2Table, 1);
+
     let expandedRight = permute(right, expansionTable);
     
+
 }
 
 function parityDrop(key){
