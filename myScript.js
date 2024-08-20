@@ -231,7 +231,12 @@ submitButton.addEventListener('click', () => {
     const plainTextInput = plainText.value;
 
     const keyInput = key.value;
-
+    if(plainTextInput.length !== 16){
+        return alert("the plaintext should be 16 bytes");
+    }
+    else if(keyInput.length !== 16){
+        return alert("the key should be 16 bytes");
+    }
     card.classList.add('show');
 
     const encryptedText = encrypt(plainTextInput, keyInput);
