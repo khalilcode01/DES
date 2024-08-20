@@ -128,7 +128,7 @@ function f(right, key, round) {
         18, 31, 10, 2, 8, 24, 14, 32, 27, 3, 9, 19, 13, 
         30, 6, 22, 11, 4, 25];
 
-    roundKey = permuteKey(key, pc2Table, round);
+    roundKey = generateRoundKey(key, pc2Table, round);
 
     let expandedRight = permute(right, expansionTable);
     
@@ -166,9 +166,29 @@ function parityDrop(key){
 
 }
 
-function roundEncrypt(leftPlainText, rightPlainText, dropedKey, round) {
+function generateRoundKey(key) {
+    
+    const pc2Table = [
+        14, 17, 11, 24, 1, 5, 3, 28,
+        15, 6, 21, 10, 23, 19, 12, 4,
+        26, 8, 16, 7, 27, 20, 13, 2,
+        41, 52, 31, 37, 47, 55, 30, 40,
+        51, 45, 33, 48, 44, 49, 39, 56,
+        34, 53, 46, 42, 50, 36, 29, 32
+    ];
+
+    let subkeys = [];
+
+    for (let round = 1; round <= 16; round++) {
+        subkeys.push(permuteKey(key, pc2Table, round));
+    }
+
+    return subkeys;
+}
+
+function roundEncrypt(leftPlainText, rightPlainText, roundKey) {
     round++;
-    roundLeft = f(rightPlainText, dropedKey);
+    roundLeft = f(rightPlainText, roundKey);
     xored = xOr(roundLeft, rightPlainText);
     leftPlainText = rightPlainText;
     rightPlainText = xored;
@@ -200,6 +220,8 @@ function encrypt(plainText, key) {
     
     let rightPlainText = '';
     
+    
+
     for(let i = 0; i < 64; i++){
         
         if(i < 32)
@@ -210,8 +232,18 @@ function encrypt(plainText, key) {
 
     }
     key = hexToBinary(key);
+
     dropedKey = parityDrop(key);
-    for(let i = 0; i < 16; i++){
-    roundEncrypt(leftPlainText, rightPlainText, dropedKey, round);
+
+    let roundKeys = generateRoundKey(dropedKey);
+
+    for(let round = 0; round < 16; round++){
+        [left, right] = roundEncrypt(leftPlainText, rightPlainText, roundKeys[round]);
     }
+
+    combinedText = rightPlainText + leftPlainText;
+
+    let cipherText = parseInt(combinedText, 2).toString(16).toUpperCase().padStart(16, '0');
+
+    return cipherText;
 }
