@@ -214,7 +214,35 @@ function encrypt(plainText, key) {
     
     return bigValue.toString(16).toUpperCase().padStart(16, '0');
 }
-const plainText = "0123456789ABCDEF";
-const key = "133457799BBCDFF1";
-const encryptedText = encrypt(plainText, key);
-console.log("Encrypted Text:", encryptedText);
+const plainText = document.querySelector('.plainText');
+
+const key = document.querySelector('.key');
+
+const submitButton = document.querySelector('.submit');
+
+let card = document.querySelector('.open');
+
+let result = document.querySelector('.result');
+
+let close = document.querySelector('.close');
+
+submitButton.addEventListener('click', () => {
+    
+    const plainTextInput = plainText.value;
+
+    const keyInput = key.value;
+
+    card.classList.add('show');
+
+    const encryptedText = encrypt(plainTextInput, keyInput);
+
+    result.textContent += encryptedText;
+
+});
+close.addEventListener('click', () => {
+    card.classList.remove('show');
+    result.textContent = '';
+})
+const plainTextt = "0123456789ABCDEF";
+const keyy = "133457799BBCDFF1";
+
