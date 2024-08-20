@@ -215,13 +215,12 @@ function encryptBlock(plainText, keys) {
     
 
     let permutedText = permute(plainText, initialPermutation);
-    
     let left = permutedText.slice(0, 32);
 
     let right = permutedText.slice(32, 64);
     
     for (let round = 0; round < 16; round++) {
-        let newRight = (parseInt(left, 2) ^ parseInt(f(right, keys[round]), 2)).toString(2).padStart(32, '0');
+        let newRight = (BigInt('0b' + left) ^ BigInt('0b' + f(right, keys[round]))).toString(2).padStart(32, '0');
         left = right;
         right = newRight;
     }
@@ -233,15 +232,15 @@ function encryptBlock(plainText, keys) {
 function encrypt(plainText, key) {
     
     let binaryKey = hexToBinary(key);
-
+    
     let dropedKey = parityDrop(binaryKey);
-
+    
     let roundKeys = generateRoundKeys(dropedKey);
     
     let binaryPlainText = hexToBinary(plainText);
-
+    
     let encryptedText = encryptBlock(binaryPlainText, roundKeys);
-
+   
     return parseInt(encryptedText, 2).toString(16).toUpperCase().padStart(16, '0');
 }
 const plainText = "0123456789ABCDEF";
