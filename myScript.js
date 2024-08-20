@@ -149,14 +149,6 @@ function generateRoundKeys(key) {
     return subkeys;
 }
 
-function roundEncrypt(leftPlainText, rightPlainText, roundKey) {
-    let roundright = f(rightPlainText, roundKey);
-    let xored = xOr(leftPlainText, roundright);
-    leftPlainText = rightPlainText;
-    rightPlainText = xored;
-    return [leftPlainText, rightPlainText];
-}
-
 function encryptBlock(plainText, keys) {
     
     const initialPermutation = [58, 50, 42, 34, 26, 18, 10, 2, 60, 52, 44, 36, 
