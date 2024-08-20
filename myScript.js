@@ -248,6 +248,4 @@ close.addEventListener('click', () => {
     card.classList.remove('show');
     result.textContent = '';
 })
-const plainTextt = "0123456789ABCDEF";
-const keyy = "133457799BBCDFF1";
 
