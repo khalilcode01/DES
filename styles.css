@@ -1,0 +1,23 @@
+* {
+    box-sizing: border-box;
+    
+}
+html {
+    height: 100%;
+}
+.header
+.header {
+    height: 30px;
+}
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+.plaintext, .key {
+    width: 270px;
+}
+.submit {
+    width: 130px;
+}
