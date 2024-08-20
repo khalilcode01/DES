@@ -23,32 +23,6 @@ function circularShiftLeft(str, shiftAmount) {
     return str.slice(shift) + str.slice(0, shift);
 }
 
-function permuteKey(key, permutationTable, roundNumber) {
-    
-    const finalPermutationTable = [
-        40, 8, 48, 16, 56, 24, 64, 32,
-        39, 7, 47, 15, 55, 23, 63, 31,
-        38, 6, 46, 14, 54, 22, 62, 30,
-        37, 5, 45, 13, 53, 21, 61, 29,
-        36, 4, 44, 12, 52, 20, 60, 28,
-        35, 3, 43, 11, 51, 19, 59, 27,
-        34, 2, 42, 10, 50, 18, 58, 26,
-        33, 1, 41, 9, 49, 17, 57, 25
-    ];
-
-    const shiftTable = [
-        1, 1, 2, 2, 2, 2, 2, 2,
-        1, 2, 2, 2, 2, 2, 2, 1
-    ];
-    
-    combinedKey = shiftLeft(key, roundNumber);
-
-    return permute(combinedKey, permutationTable);
-    
-}
-
-
-
 function xOr(expandedRight, roundKey) {
     return expandedRight.split('').map((bit, index) => bit ^ roundKey[index]).join('');
 }
@@ -110,30 +84,19 @@ function f(right, key) {
              2,  1, 14,  7,  4, 10,  8, 13, 15, 12,  9,  0,  3,  5,  6, 11
         ]
     ];
-    
-    const pc2Table = [
-        14, 17, 11, 24,  1,  5,
-        3, 28, 15,  6, 21, 10,
-        23, 19, 12,  4, 26,  8,
-        16,  7, 27, 20, 13,  2,
-        41, 52, 31, 37, 47, 55,
-        30, 40, 51, 45, 33, 48,
-        44, 49, 39, 56, 34, 53,
-        46, 42, 50, 36, 29, 32
-        ];
-    
+        
     const permutationTable = [16, 7, 20, 21, 29, 12, 28, 17, 1, 15, 23, 26, 5, 
         18, 31, 10, 2, 8, 24, 14, 32, 27, 3, 9, 19, 13, 
         30, 6, 22, 11, 4, 25];
 
     let expandedRight = permute(right, expansionTable);
     
-    let xorWithKey = xOr(expandedRight, key);
+    let xorKey = xOr(expandedRight, key);
     
     let result = '';
 
     for (let i = 0; i < 8; i++) {
-        let block = xorWithKey.slice(i * 6, (i + 1) * 6);
+        let block = xorKey.slice(i * 6, (i + 1) * 6);
         let row = parseInt(block[0] + block[5], 2);
         let col = parseInt(block.slice(1, 5), 2);
         let output = sBoxes[i][row * 16 + col].toString(2).padStart(4, '0');
@@ -247,8 +210,9 @@ function encrypt(plainText, key) {
     
     let encryptedText = encryptBlock(binaryPlainText, roundKeys);
     
-    let bigIntValue = BigInt('0b' + encryptedText);
-    return bigIntValue.toString(16).toUpperCase().padStart(16, '0');
+    let bigValue = BigInt('0b' + encryptedText);
+    
+    return bigValue.toString(16).toUpperCase().padStart(16, '0');
 }
 const plainText = "0123456789ABCDEF";
 const key = "133457799BBCDFF1";
